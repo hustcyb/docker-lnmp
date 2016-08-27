@@ -1,0 +1,35 @@
+nginx:
+  container_name: nginx
+  image: nginx
+  ports:
+    - "80:80"
+  volumes:
+    - ./nginx/etc/nginx:/etc/nginx
+    - ./www/var/www/html:/var/www/html
+  links:
+    - php
+
+php:
+  container_name: php
+  build: ./php
+  ports:
+    - "9000:9000"
+  volumes:
+    - ./www/var/www/html:/var/www/html
+  links:
+    - mysql
+
+mysql:
+  container_name: mysql
+  image: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    #- MYSQL_ROOT_PASSWORD=jumi18.com
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    - MYSQL_USER=admin
+    - MYSQL_PASSWORD=123
+    - MYSQL_DATABASE=test
+  volumes:
+    - ./mysql/var/lib/mysql:/var/lib/mysql
+    - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
